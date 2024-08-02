@@ -6,6 +6,7 @@ package frc.robot;
 
 import com.pathplanner.lib.auto.AutoBuilder;
 import com.pathplanner.lib.auto.NamedCommands;
+import com.pathplanner.lib.commands.PathPlannerAuto;
 
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
@@ -14,13 +15,15 @@ import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
-import edu.wpi.first.wpilibj2.command.Commands;
+import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
+import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import frc.robot.Constants.RobotConstants;
 import frc.robot.commands.TeleopSwerve;
 import frc.robot.commands.TeleopUpper;
+import frc.robot.commands.autos.GROUND;
+import frc.robot.commands.autos.SHOOT;
 import frc.robot.subsystems.Swerve;
 import frc.robot.subsystems.Upper;
-import frc.robot.subsystems.Vision;
 
 public class RobotContainer {
 
@@ -64,6 +67,22 @@ public class RobotContainer {
   }
 
   public Command getAutonomousCommand() {
-    return autoChooser.getSelected();
+    return new SequentialCommandGroup (
+      new ParallelCommandGroup(
+        new PathPlannerAuto("MB-X1"),
+        new GROUND(s_Upper)
+        ),
+      new SHOOT(s_Upper),
+      new ParallelCommandGroup(
+        new PathPlannerAuto("X1-X2"),
+        new GROUND(s_Upper)
+      ),
+      new SHOOT(s_Upper),
+      new ParallelCommandGroup(
+        new PathPlannerAuto("X2-X3"),
+        new GROUND(s_Upper)
+      ),
+      new SHOOT(s_Upper)
+    );
   }
 }

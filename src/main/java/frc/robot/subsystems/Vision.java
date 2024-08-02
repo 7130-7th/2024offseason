@@ -21,6 +21,8 @@ public class Vision extends SubsystemBase {
 
     private Pose2d robotPose = new Pose2d();
 
+
+
     public double getTx () {
         return tx.getDouble(0);
     }
@@ -43,7 +45,7 @@ public class Vision extends SubsystemBase {
 
     public boolean hasTarget () {
         return table.getEntry("tid").getBoolean(false);
-    }    
+    }
     
     @Override
     public void periodic() {

@@ -27,8 +27,6 @@ public class TeleopSwerve extends Command {
   private double strafeVal;
   private double rotationVal;
 
-  private simplePID zPID = new simplePID(2, 0);
-
   public TeleopSwerve(Swerve s_Swerve, XboxController controller) {
     this.s_Swerve = s_Swerve;
     this.driver = controller;
@@ -45,43 +43,43 @@ public class TeleopSwerve extends Command {
 
     /* Get Values, Deadband */
     translationVal = translationLimiter.calculate(
-        MathUtil.applyDeadband(-driver.getLeftY() * 0.5, Constants.SwerveConstants.axisDeadBand));
+        MathUtil.applyDeadband(-driver.getLeftY(), Constants.SwerveConstants.axisDeadBand));
     strafeVal = strafeLimiter.calculate(
-        MathUtil.applyDeadband(-driver.getLeftX() * 0.5, Constants.SwerveConstants.axisDeadBand));
+        MathUtil.applyDeadband(-driver.getLeftX(), Constants.SwerveConstants.axisDeadBand));
     rotationVal = 
       rotationLimiter
-        .calculate(MathUtil.applyDeadband(driver.getRightX() * 1, Constants.SwerveConstants.axisDeadBand));
+        .calculate(MathUtil.applyDeadband(driver.getRightX(), Constants.SwerveConstants.axisDeadBand));
 
-    if (driver.getLeftBumper()) {
+    // if (driver.getLeftBumper()) {
 
-      double zTarget;
-      if (DriverStation.getAlliance().isPresent() ) {
-        if (DriverStation.getAlliance().get() == Alliance.Blue) {
-          zTarget = FieldConstants.blueSpeakerCoord.minus(s_Swerve.getOdometryPose().getTranslation()).getAngle().getRotations();
-        } else {
-          zTarget = FieldConstants.redSpeakerCoord.minus(s_Swerve.getOdometryPose().getTranslation()).getAngle().getRotations();
-        }
-      } else {
-        zTarget = s_Swerve.getYaw().getRotations();
-      }
+    //   double zTarget;
+    //   if (DriverStation.getAlliance().isPresent() ) {
+    //     if (DriverStation.getAlliance().get() == Alliance.Blue) {
+    //       zTarget = FieldConstants.blueSpeakerCoord.minus(s_Swerve.getOdometryPose().getTranslation()).getAngle().getRotations();
+    //     } else {
+    //       zTarget = FieldConstants.redSpeakerCoord.minus(s_Swerve.getOdometryPose().getTranslation()).getAngle().getRotations();
+    //     }
+    //   } else {
+    //     zTarget = s_Swerve.getYaw().getRotations();
+    //   }
 
-      double z = s_Swerve.getYaw().getRotations();
-      z -= Math.floor(z);
-      if (z > 0.5) z -= 1;
+    //   double z = s_Swerve.getYaw().getRotations();
+    //   z -= Math.floor(z);
+    //   if (z > 0.5) z -= 1;
+    //   s_Swerve.drive(
+    //     new Translation2d(translationVal, strafeVal).times(SwerveConstants.maxModuleSpeed),
+    //     zPID.calculate(z, zTarget) * SwerveConstants.maxAngularVelocity,
+    //     true,
+    //     false
+    //   );
+
+    // } else {
       s_Swerve.drive(
         new Translation2d(translationVal, strafeVal).times(SwerveConstants.maxModuleSpeed),
-        zPID.calculate(z, zTarget) * SwerveConstants.maxAngularVelocity,
-        true,
-        false
+        rotationVal * Constants.SwerveConstants.maxAngularVelocity, true,
+        true
       );
-
-    } else {
-      s_Swerve.drive(
-        new Translation2d(translationVal, strafeVal).times(SwerveConstants.maxModuleSpeed),
-        rotationVal, true,
-        false
-      );
-    }
+    // }
   }
 
   @Override
