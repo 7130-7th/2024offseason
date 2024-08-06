@@ -8,6 +8,7 @@ import com.pathplanner.lib.auto.AutoBuilder;
 import com.pathplanner.lib.auto.NamedCommands;
 import com.pathplanner.lib.commands.PathPlannerAuto;
 
+import edu.wpi.first.math.filter.Debouncer;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
@@ -20,6 +21,7 @@ import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import frc.robot.Constants.RobotConstants;
 import frc.robot.commands.TeleopSwerve;
 import frc.robot.commands.TeleopUpper;
+import frc.robot.commands.autos.DEFAULT;
 import frc.robot.commands.autos.GROUND;
 import frc.robot.commands.autos.SHOOT;
 import frc.robot.subsystems.Swerve;
@@ -68,21 +70,28 @@ public class RobotContainer {
 
   public Command getAutonomousCommand() {
     return new SequentialCommandGroup (
-      new ParallelCommandGroup(
-        new PathPlannerAuto("MB-X1"),
-        new GROUND(s_Upper)
-        ),
       new SHOOT(s_Upper),
       new ParallelCommandGroup(
-        new PathPlannerAuto("X1-X2"),
-        new GROUND(s_Upper)
+        new GROUND(s_Upper),
+        new PathPlannerAuto("MB-X2")
       ),
-      new SHOOT(s_Upper),
-      new ParallelCommandGroup(
-        new PathPlannerAuto("X2-X3"),
-        new GROUND(s_Upper)
-      ),
+      // new DEFAULT(s_Upper),
       new SHOOT(s_Upper)
+    //   new ParallelCommandGroup(
+    //     new PathPlannerAuto("MB-X1"),
+    //     new GROUND(s_Upper)
+    //     ),
+    //   new SHOOT(s_Upper),
+    //   new ParallelCommandGroup(
+    //     new PathPlannerAuto("X1-X2"),
+    //     new GROUND(s_Upper)
+    //   ),
+    //   new SHOOT(s_Upper),
+    //   new ParallelCommandGroup(
+    //     new PathPlannerAuto("X2-X3"),
+    //     new GROUND(s_Upper)
+    //   ),
+    //   new SHOOT(s_Upper)
     );
   }
 }

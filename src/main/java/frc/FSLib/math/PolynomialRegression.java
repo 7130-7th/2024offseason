@@ -3,8 +3,8 @@ package frc.FSLib.math;
 public class PolynomialRegression {
 
     // 已知數值(已測試)
-    private static final double[] tzKnownValues = {2.25, 2.5, 3, 3.35, 3.5, 3.75, 4};
-    private static final double[] degKnownValues = {-0.1789, -0.1655, -0.1574, -0.1543, -0.1496, -0.1482, -0.1438};
+    private static final double[] tzKnownValues = {1.54, 2.25, 2.5, 3, 3.35, 3.5, 3.75, 4};
+    private static final double[] degKnownValues = {-0.22, -0.1785, -0.1677, -0.1584, -0.1533, -0.1487, -0.1455, -0.1411};
 
     public static void main(String[] args) {
         // 測試輸入(可修改下方數值)

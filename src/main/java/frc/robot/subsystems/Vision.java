@@ -13,6 +13,7 @@ public class Vision extends SubsystemBase {
 
     private final NetworkTable table = NetworkTableInstance.getDefault().getTable("limelight");
     private final NetworkTableEntry tx = table.getEntry("tx");
+    private final NetworkTableEntry tpcs = table.getEntry("targetpose_cameraspace");
     private final NetworkTableEntry botpose = table.getEntry("botpose_wpiblue");
 
     private final NoiseFilter xFilter = new NoiseFilter(20);
@@ -45,6 +46,10 @@ public class Vision extends SubsystemBase {
 
     public boolean hasTarget () {
         return table.getEntry("tid").getBoolean(false);
+    }
+
+    public double getTz() {
+        return tpcs.getDoubleArray(new double[6])[2];
     }
     
     @Override

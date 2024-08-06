@@ -57,7 +57,7 @@ public class Swerve extends SubsystemBase {
       this::driveRobotRelative, 
       SwerveConstants.pathFollowerConfig,
       () -> {
-          if (DriverStation.getAlliance().isPresent()) return DriverStation.getAlliance().get() == DriverStation.Alliance.Red;
+          if (DriverStation.getAlliance().isPresent()) return DriverStation.getAlliance().get() == DriverStation.Alliance.Blue;
           return false;
       },
       this

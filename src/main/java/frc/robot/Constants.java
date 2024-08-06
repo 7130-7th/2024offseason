@@ -56,9 +56,12 @@ public class Constants {
         public static final int elbowCancoderID = 4;
         public static final double elbowCancoderOffset = -0.00709;
 
+        public static final int ledLength = 15;
+        public static final int ledPwmPort = 7;
+
         public static boolean speedLimitEnabled = true;
     
-        public static final double elbowKP = 6.5;
+        public static final double elbowKP = 6.8;
         public static final double elbowKI = 0.0;
         public static final double elbowKD = 0.5;
         public static final double elbowiWindup = 0.0;
@@ -68,28 +71,29 @@ public class Constants {
         public static final double shooterKD = 0.0;
     
         public static final Rotation2d ELBOW_AMP_POS = Rotation2d.fromRotations(0.013916);
-        public static final Rotation2d ELBOW_DEFAULT_POS = Rotation2d.fromRotations(0.009033);
-        public static final Rotation2d Elbow_ENDGAME_POS = Rotation2d.fromRotations(-0.24);
-        public static final Rotation2d ELBOW_GROUND_POS = Rotation2d.fromRotations(-0.243);
-        public static final Rotation2d ELBOW_PREENDGAME_POS = Rotation2d.fromRotations(0.05);
+        public static final Rotation2d ELBOW_DEFAULT_POS = Rotation2d.fromRotations(-0.203867);
+        public static final Rotation2d ELBOW_ENDGAME_POS = Rotation2d.fromRotations(-0.244);
+        public static final Rotation2d ELBOW_GROUND_POS = Rotation2d.fromRotations(-0.2435);
+        public static final Rotation2d ELBOW_PREENDGAME_POS = Rotation2d.fromRotations(0.01);
 
-        public static final AngularVelocity INTAKE_AMP_SPEED = AngularVelocity.fromRevPM(-3000);
+        public static final AngularVelocity INTAKE_AMP_SPEED = AngularVelocity.fromRevPM(0);
         public static final AngularVelocity INTAKE_DEFAULT_SPEED = AngularVelocity.fromRevPM(0);
         public static final AngularVelocity INTAKE_ENDGAME_SPEED = AngularVelocity.fromRevPM(0);
-        public static AngularVelocity INTAKE_GROUND_SPEED = AngularVelocity.fromRevPM(-1800);
+        public static AngularVelocity INTAKE_GROUND_SPEED = AngularVelocity.fromRevPM(-2000);
         public static final AngularVelocity INTAKE_PREENDGAME_SPEED = AngularVelocity.fromRevPM(0);
         public static final AngularVelocity INTAKE_SHOOT_SPEED = AngularVelocity.fromRevPM(-3000);
         public static final AngularVelocity INTAKE_SPEAKER_SPEED = AngularVelocity.fromRevPM(0);
 
+        
         public static final double INTAKE_MAX_RPM = 5000;
 
-        public static final AngularVelocity SHOOTER_AMP_SPEED = AngularVelocity.fromRevPM(-5000);
+        public static final AngularVelocity SHOOTER_AMP_SPEED = AngularVelocity.fromRevPM(-1000);
         public static final AngularVelocity SHOOTER_DEFAULT_SPEED = AngularVelocity.fromRevPM(0);
         public static final AngularVelocity SHOOTER_ENDGAME_SPEED = AngularVelocity.fromRevPM(0);
         public static final AngularVelocity SHOOTER_GROUND_SPEED = AngularVelocity.fromRevPM(0);
         public static final AngularVelocity SHOOTER_PREENDGAME_SPEED = AngularVelocity.fromRevPM(0);
 
-        public static final double SHOOTER_LEGAL_SPEED = 4000;
+        public static final double SHOOTER_LEGAL_RPM = 4000;
 
     }
 
@@ -128,9 +132,9 @@ public class Constants {
                     shooterTarget = UpperConstants.SHOOTER_DEFAULT_SPEED;
                     break;
                 case ENDGAME:
-                    elbowTarget = UpperConstants.ELBOW_GROUND_POS;
-                    intakeTarget = UpperConstants.INTAKE_GROUND_SPEED;
-                    shooterTarget = UpperConstants.SHOOTER_GROUND_SPEED;
+                    elbowTarget = UpperConstants.ELBOW_ENDGAME_POS;
+                    intakeTarget = UpperConstants.INTAKE_ENDGAME_SPEED;
+                    shooterTarget = UpperConstants.SHOOTER_ENDGAME_SPEED;
                     break;
                 case GROUND:
                     elbowTarget = UpperConstants.ELBOW_GROUND_POS;
@@ -142,12 +146,19 @@ public class Constants {
                     intakeTarget = UpperConstants.INTAKE_PREENDGAME_SPEED;
                     shooterTarget = UpperConstants.SHOOTER_PREENDGAME_SPEED;
                     break;
-                case SHOOT, SPEAKER:
+                case SHOOT:
+                        intakeTarget = UpperConstants.INTAKE_SHOOT_SPEED;
+                case SPEAKER:
+                    double[] tpcs = LimelightHelpers.getTargetPose_CameraSpace("limelight");
+                    double tz = tpcs[2];
+                    System.out.println(tz);
                     double distance = DriverStation.getAlliance().get() == Alliance.Red ? 
                         RobotConstants.odometryPose.getTranslation().getDistance(FieldConstants.redSpeakerCoord)
                         : RobotConstants.odometryPose.getTranslation().getDistance(FieldConstants.blueSpeakerCoord);
+                        if (tz>=1) {
                     elbowTarget = Rotation2d.fromRotations(
-                        LinearRegression.calculate(MapConstants.DISTANCE_TO_ELBOW_AND_SHOOTER, distance, 1)
+                        // LinearRegression.calculate(MapConstants.DISTANCE_TO_ELBOW_AND_SHOOTER, distance, 1)
+                        PolynomialRegression.predictDeg(tz)
                     );
                     if (RobotConstants.upperState == UpperState.SHOOT) {
                         intakeTarget = UpperConstants.INTAKE_SHOOT_SPEED;
@@ -155,9 +166,11 @@ public class Constants {
                         intakeTarget = UpperConstants.INTAKE_SPEAKER_SPEED;
                     }
                     shooterTarget = AngularVelocity.fromRadPM(
-                        LinearRegression.calculate(MapConstants.DISTANCE_TO_ELBOW_AND_SHOOTER, distance, 2)
+                        // LinearRegression.calculate(MapConstants.DISTANCE_TO_ELBOW_AND_SHOOTER, distance, 2)
+                        -3000
                     );
                     SmartDashboard.putNumber("distance to Speaker", distance);
+                }
             }
         }
     }
@@ -268,7 +281,7 @@ public class Constants {
         public static final int driveMotorID = 21;
         public static final int angleMotorID = 22;
         public static final int canCoderID = 2;
-        public static final Rotation2d angleOffset = Rotation2d.fromRotations(0.463716);
+        public static final Rotation2d angleOffset = Rotation2d.fromRotations(0.413911+0.043457);
         public static final SwerveModuleConstants constants = new SwerveModuleConstants(driveMotorID, angleMotorID, canCoderID, angleOffset);
     }
 

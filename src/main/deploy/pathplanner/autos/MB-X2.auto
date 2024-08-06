@@ -2,8 +2,8 @@
   "version": 1.0,
   "startingPose": {
     "position": {
-      "x": 2.0,
-      "y": 7.0
+      "x": 1.4324651726226545,
+      "y": 5.564955745296107
     },
     "rotation": 0
   },
@@ -12,27 +12,21 @@
     "data": {
       "commands": [
         {
-          "type": "path",
+          "type": "wait",
           "data": {
-            "pathName": "S1"
+            "waitTime": 0.5
           }
         },
         {
           "type": "path",
           "data": {
-            "pathName": "S2"
+            "pathName": "MB-X2"
           }
         },
         {
-          "type": "path",
+          "type": "wait",
           "data": {
-            "pathName": "S3"
-          }
-        },
-        {
-          "type": "path",
-          "data": {
-            "pathName": "S4"
+            "waitTime": 2.0
           }
         }
       ]
