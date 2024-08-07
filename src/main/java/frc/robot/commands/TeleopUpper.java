@@ -50,7 +50,7 @@ public class TeleopUpper extends Command {
         if(controller.getRightTriggerAxis() < 0.8 && RobotConstants.upperState == UpperState.SHOOT) RobotConstants.upperState = UpperState.DEFAULT;
 
         if (s_Upper.hasNote()) {UpperConstants.INTAKE_GROUND_SPEED = AngularVelocity.fromRevPM(0);} 
-        else {UpperConstants.INTAKE_GROUND_SPEED = AngularVelocity.fromRevPM(-3000);}
+        else {UpperConstants.INTAKE_GROUND_SPEED = AngularVelocity.fromRevPM(-2000);}
 
         s_Upper.setElbow(-elbowPID.calculate(UpperStateMachine.elbowTarget.getRotations() - s_Upper.getElbowRotation()));
         s_Upper.setIntake(UpperStateMachine.intakeTarget.getRevPM() / UpperConstants.INTAKE_MAX_RPM);
@@ -59,29 +59,29 @@ public class TeleopUpper extends Command {
         s_Upper.setRightShooter(output + shooterPID.calculate(s_Upper.getRightShooterRPM(), UpperStateMachine.shooterTarget.getRevPM()));
 
         // LED
-        if (RobotConstants.upperState == UpperState.DEFAULT) {
-            if(Math.abs(s_Upper.getShooterRPM()) <= 25) s_Upper.marquee(232, 213, 245);
-            else s_Upper.charge(255, 0, 0, false);
-        }
-        if (RobotConstants.upperState == UpperState.GROUND) {
-            if(Math.abs(s_Upper.getShooterRPM()) <= 25) s_Upper.marquee(232, 213, 245);
-            else s_Upper.charge(255, 0, 0, false);
-        }
-        if (RobotConstants.upperState == UpperState.AMP) {
-            s_Upper.setLED(255, 255, 0);
-        }
-        if (RobotConstants.upperState == UpperState.SPEAKER) {
-            if(Math.abs(s_Upper.getShooterRPM()) > UpperConstants.SHOOTER_LEGAL_RPM) s_Upper.setLED(0,255,0);
-            else s_Upper.charge(255,0,0, false);
-        }
-        if (RobotConstants.upperState == UpperState.SHOOT) {
-            s_Upper.blink(0,255,0);
-        }
-        if (RobotConstants.upperState == UpperState.PREENDGAME) {
-            s_Upper.setLED(87, 169, 254);
-        }
-        if (RobotConstants.upperState == UpperState.ENDGAME) {
-            s_Upper.setLED(87, 169, 254);
-        }
+        // if (RobotConstants.upperState == UpperState.DEFAULT) {
+        //     if(Math.abs(s_Upper.getShooterRPM()) <= 25) s_Upper.marquee(232, 213, 245);
+        //     else s_Upper.charge(255, 0, 0, false);
+        // }
+        // if (RobotConstants.upperState == UpperState.GROUND) {
+        //     if(Math.abs(s_Upper.getShooterRPM()) <= 25) s_Upper.marquee(232, 213, 245);
+        //     else s_Upper.charge(255, 0, 0, false);
+        // }
+        // if (RobotConstants.upperState == UpperState.AMP) {
+        //     s_Upper.setLED(255, 255, 0);
+        // }
+        // if (RobotConstants.upperState == UpperState.SPEAKER) {
+        //     if(Math.abs(s_Upper.getShooterRPM()) > UpperConstants.SHOOTER_LEGAL_RPM) s_Upper.setLED(0,255,0);
+        //     else s_Upper.charge(255,0,0, false);
+        // }
+        // if (RobotConstants.upperState == UpperState.SHOOT) {
+        //     s_Upper.blink(0,255,0);
+        // }
+        // if (RobotConstants.upperState == UpperState.PREENDGAME) {
+        //     s_Upper.setLED(87, 169, 254);
+        // }
+        // if (RobotConstants.upperState == UpperState.ENDGAME) {
+        //     s_Upper.setLED(87, 169, 254);
+        // }
     }
 }

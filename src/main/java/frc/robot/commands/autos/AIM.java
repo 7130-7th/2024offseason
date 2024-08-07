@@ -1,7 +1,6 @@
 package frc.robot.commands.autos;
 
 import edu.wpi.first.math.MathUtil;
-import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.filter.SlewRateLimiter;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
@@ -9,13 +8,16 @@ import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.networktables.NetworkTable;
 import edu.wpi.first.networktables.NetworkTableEntry;
 import edu.wpi.first.networktables.NetworkTableInstance;
-import edu.wpi.first.wpilibj.Preferences;
+import edu.wpi.first.wpilibj.DriverStation;
+import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.XboxController;
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.FSLib.math.PID;
+import frc.FSLib.math.simplePID;
 import frc.robot.Constants;
-import frc.robot.Constants.LimeLight;
+import frc.robot.Constants.FieldConstants;
+import frc.robot.Constants.SwerveConstants;
 import frc.robot.subsystems.Swerve;
 import frc.robot.subsystems.Vision;
 
@@ -24,13 +26,13 @@ public class AIM extends Command {
   private Vision s_Vision;
   private XboxController driver;
 
-  private SlewRateLimiter translationLimiter = new SlewRateLimiter(3.0);
-  private SlewRateLimiter strafeLimiter = new SlewRateLimiter(3.0);
-  private SlewRateLimiter rotationLimiter = new SlewRateLimiter(3.0);
+  private static enum swerveState{
+    DEFAULT,
+    aimBot
+  }
 
-  private double translationVal;
-  private double strafeVal;
-  private double rotationVal;
+  private swerveState state = swerveState.DEFAULT;
+
   private double ema;
 
   public double KP = Constants.LimeLight.KPDefault;
@@ -46,56 +48,38 @@ public class AIM extends Command {
   private NetworkTableEntry tpcs = table.getEntry("targetpose_cameraspace");
   
   private PID facingPID = new PID(KP, KI, KD, WindUp, Limit);
-  
 
-  public AIM(Swerve s_Swerve, Vision s_Vision, XboxController controller) {
+  private SlewRateLimiter translationLimiter = new SlewRateLimiter(3.0);
+  private SlewRateLimiter strafeLimiter = new SlewRateLimiter(3.0);
+  private SlewRateLimiter rotationLimiter = new SlewRateLimiter(3.0);
+
+  private double translationVal;
+  private double strafeVal;
+  private double rotationVal;
+
+  private Timer timer = new Timer();
+
+  public AIM(Swerve s_Swerve,Vision s_Vision) {
     this.s_Swerve = s_Swerve;
     this.s_Vision = s_Vision;
-    this.driver = controller;
-    addRequirements(s_Swerve);
-    addRequirements(s_Vision);
+    addRequirements(s_Swerve, s_Vision);
+  }
+
+  @Override
+  public void initialize() {
+    timer.reset();
+    timer.start();
   }
 
   @Override
   public void execute() {
-    Preferences.initDouble(LimeLight.KPKey, KP);
-    Preferences.initDouble(LimeLight.KIKey, KI);
-    Preferences.initDouble(LimeLight.KDKey, KD);
-    Preferences.initDouble(LimeLight.WindupKey, WindUp);
-    Preferences.initDouble(LimeLight.LimKey, Limit);
-    Preferences.initDouble(LimeLight.SmoothKey, Smooth);
-
-    KP = Preferences.getDouble(LimeLight.KPKey, KP);
-    KI = Preferences.getDouble(LimeLight.KIKey, KI);
-    KD = Preferences.getDouble(LimeLight.KDKey, KD);
-    WindUp = Preferences.getDouble(LimeLight.WindupKey, WindUp);
-    Limit = Preferences.getDouble(LimeLight.LimKey, Limit);
-    Smooth = Preferences.getDouble(LimeLight.SmoothKey, Smooth);
-
-    // SmartDashboard.putNumber("tx", tx.getDouble(0.0));
-    // SmartDashboard.putNumber("ty", ty.getDouble(0.0));
-    // SmartDashboard.putNumber("tz", tpcs.getDoubleArray(new double[6])[2]);
-    // SmartDashboard.putNumber("speed", rotationVal);
-    
-    // if (Math.abs(tx.getDouble(0.0))<=1) {
-    //   ema = Smooth*tx.getDouble(0.0)+(1-Smooth)*ema;
-    //   rotationVal = ema*1;
-    //   // rotationVal=0;
-    // }else{
-    //   rotationVal = facingPID.calculate(tx.getDouble(0.0))*1;
-    //   // rotationVal = MathUtil.applyDeadband(tx.getDouble(0), 0.05);
-    // }
-
-    // rotationVal = facingPID.calculate(tx.getDouble(0.0));
-
-    ema = Smooth*facingPID.calculate(tx.getDouble(0.0))+(1-Smooth)*ema;
-    rotationVal = ema;
-
-    /* Drive */
-    s_Swerve.drive(
-        new Translation2d(translationVal, strafeVal).times(Constants.SwerveConstants.maxModuleSpeed),
+      ema = 0.8*facingPID.calculate(tx.getDouble(0.0))+(1-0.8)*ema;
+      rotationVal = -ema;
+      s_Swerve.drive(
+        new Translation2d(translationVal, strafeVal).times(SwerveConstants.maxModuleSpeed),
         rotationVal * Constants.SwerveConstants.maxAngularVelocity, true,
-        true);
+        true
+      );
   }
 
   @Override
@@ -104,7 +88,11 @@ public class AIM extends Command {
   }
 
   @Override
-  public boolean isFinished(){
+  public boolean isFinished() {
+    if (timer.get() >= 0.5) {
+      return true;
+    } else {
     return false;
+    }
   }
 }

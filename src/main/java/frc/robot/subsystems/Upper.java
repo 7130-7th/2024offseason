@@ -44,10 +44,10 @@ public class Upper extends SubsystemBase {
         configElbow();
         configShooter();
 
-        led.setLength(UpperConstants.ledLength);
-        setLED(255,255,255);
-        led.setData(buffer);
-        led.start();
+        // led.setLength(UpperConstants.ledLength);
+        // setLED(255,255,255);
+        // led.setData(buffer);
+        // led.start();
     }
 
     // config
@@ -119,122 +119,122 @@ public class Upper extends SubsystemBase {
     }
 
     // LED
-    public void setLED(int r, int g, int b) {
-        for(int i=0;i<buffer.getLength()-1;i++) buffer.setRGB(i, r, g, b);
-        led.setData(buffer);
-    }
+    // public void setLED(int r, int g, int b) {
+    //     for(int i=0;i<buffer.getLength()-1;i++) buffer.setRGB(i, r, g, b);
+    //     led.setData(buffer);
+    // }
 
-    public void blink(int r, int g, int b) {
-        timer.start();
-        if(timer.get() < 0.1) setLED(r, g, b);
-        else if(timer.get() < 0.2) setLED(0, 0, 0);
-        else timer.restart();
-    }
+    // public void blink(int r, int g, int b) {
+    //     timer.start();
+    //     if(timer.get() < 0.1) setLED(r, g, b);
+    //     else if(timer.get() < 0.2) setLED(0, 0, 0);
+    //     else timer.restart();
+    // }
 
-    public void marquee(int r, int g, int b) {
-        timer.start();
-        if(timer.get() < 0.1) {
-            for(int i=0;i<buffer.getLength()-1;i++) {
-                if(((int)((i+counter)/6)) % 2 == 0) buffer.setRGB(i, r, g, b);
-                else buffer.setRGB(i, 0, 0, 0);
-            }
-        } else if(timer.get() < 0.2){}
-        else {
-            counter++;
-            timer.restart();
-        }
-        led.setData(buffer);
-    }
+    // public void marquee(int r, int g, int b) {
+    //     timer.start();
+    //     if(timer.get() < 0.1) {
+    //         for(int i=0;i<buffer.getLength()-1;i++) {
+    //             if(((int)((i+counter)/6)) % 2 == 0) buffer.setRGB(i, r, g, b);
+    //             else buffer.setRGB(i, 0, 0, 0);
+    //         }
+    //     } else if(timer.get() < 0.2){}
+    //     else {
+    //         counter++;
+    //         timer.restart();
+    //     }
+    //     led.setData(buffer);
+    // }
 
-    public void gayPride() {
-        timer.start();
-        if(timer.get() < 0.1) {
-            for(int i=0;i<buffer.getLength()-1;i++) {
-                if((i+counter)%6 == 0) buffer.setRGB(i, 255, 0, 0);
-                if((i+counter)%6 == 1) buffer.setRGB(i, 255, 255, 0);
-                if((i+counter)%6 == 2) buffer.setRGB(i, 0, 255, 0);
-                if((i+counter)%6 == 3) buffer.setRGB(i, 0, 255, 255);
-                if((i+counter)%6 == 4) buffer.setRGB(i, 0, 0, 255);
-                if((i+counter)%6 == 5) buffer.setRGB(i, 255, 0, 255);
-            }
-        } else if(timer.get() < 0.2){}
-        else{
-            counter++;
-            timer.restart();
-        }
-        led.setData(buffer);
+    // public void gayPride() {
+    //     timer.start();
+    //     if(timer.get() < 0.1) {
+    //         for(int i=0;i<buffer.getLength()-1;i++) {
+    //             if((i+counter)%6 == 0) buffer.setRGB(i, 255, 0, 0);
+    //             if((i+counter)%6 == 1) buffer.setRGB(i, 255, 255, 0);
+    //             if((i+counter)%6 == 2) buffer.setRGB(i, 0, 255, 0);
+    //             if((i+counter)%6 == 3) buffer.setRGB(i, 0, 255, 255);
+    //             if((i+counter)%6 == 4) buffer.setRGB(i, 0, 0, 255);
+    //             if((i+counter)%6 == 5) buffer.setRGB(i, 255, 0, 255);
+    //         }
+    //     } else if(timer.get() < 0.2){}
+    //     else{
+    //         counter++;
+    //         timer.restart();
+    //     }
+    //     led.setData(buffer);
         
-    }
+    // }
 
-    public void charge(int r, int g, int b, boolean isTrap) { // from 24->31&23->16, then 15->0 
-        int chargeBar = isTrap ? MathUtility.clamp((int)(-getShooterRPM() / UpperConstants.SHOOTER_LEGAL_RPM * -0.35 * 20), 0, 20) : MathUtility.clamp((int)(-getShooterRPM() / UpperConstants.SHOOTER_LEGAL_RPM * 20), 0, 20);
-        int counter1 = 24;
-        int counter2 = 23;
-        if(chargeBar <= 4) {
-            for(int i=0;i<buffer.getLength();i++){
-                buffer.setRGB(i, 0, 0, 0);
-            }
-            for(int i=0;i<chargeBar;i++){
-                buffer.setRGB(counter1, r, g, b);
-                buffer.setRGB((counter1+1), r, g, b);
-                buffer.setRGB(counter2, r, g, b);
-                buffer.setRGB((counter2-1), r, g, b);
-                counter1+=2;
-                counter2-=2;
-            }
-        } else {
-            for(int i=0;i<buffer.getLength();i++){
-                buffer.setRGB(i, 0, 0, 0);
-            }
-            for(int i=0;i<4;i++) {
-                buffer.setRGB(counter1, r, g, b);
-                buffer.setRGB((counter1+1), r, g, b);
-                buffer.setRGB(counter2, r, g, b);
-                buffer.setRGB((counter2-1), r, g, b);
-                counter1+=2;
-                counter2-=2;
-            }
-            for(int i=15;i>20-chargeBar;i--) {
-                buffer.setRGB(i, r, g, b);
-            }
-        }
-        led.setData(buffer);
-    }
+    // public void charge(int r, int g, int b, boolean isTrap) { // from 24->31&23->16, then 15->0 
+    //     int chargeBar = isTrap ? MathUtility.clamp((int)(-getShooterRPM() / UpperConstants.SHOOTER_LEGAL_RPM * -0.35 * 20), 0, 20) : MathUtility.clamp((int)(-getShooterRPM() / UpperConstants.SHOOTER_LEGAL_RPM * 20), 0, 20);
+    //     int counter1 = 24;
+    //     int counter2 = 23;
+    //     if(chargeBar <= 4) {
+    //         for(int i=0;i<buffer.getLength();i++){
+    //             buffer.setRGB(i, 0, 0, 0);
+    //         }
+    //         for(int i=0;i<chargeBar;i++){
+    //             buffer.setRGB(counter1, r, g, b);
+    //             buffer.setRGB((counter1+1), r, g, b);
+    //             buffer.setRGB(counter2, r, g, b);
+    //             buffer.setRGB((counter2-1), r, g, b);
+    //             counter1+=2;
+    //             counter2-=2;
+    //         }
+    //     } else {
+    //         for(int i=0;i<buffer.getLength();i++){
+    //             buffer.setRGB(i, 0, 0, 0);
+    //         }
+    //         for(int i=0;i<4;i++) {
+    //             buffer.setRGB(counter1, r, g, b);
+    //             buffer.setRGB((counter1+1), r, g, b);
+    //             buffer.setRGB(counter2, r, g, b);
+    //             buffer.setRGB((counter2-1), r, g, b);
+    //             counter1+=2;
+    //             counter2-=2;
+    //         }
+    //         for(int i=15;i>20-chargeBar;i--) {
+    //             buffer.setRGB(i, r, g, b);
+    //         }
+    //     }
+    //     led.setData(buffer);
+    // }
 
-    public void charge(int r, int g, int b, double input) { // from 24->31&23->16, then 15->0 
-        int chargeBar = MathUtility.clamp((int)Math.abs((input * 20)), 0, 20);
-        int counter1 = 24;
-        int counter2 = 23;
-        if(chargeBar <= 4) {
-            for(int i=0;i<buffer.getLength();i++){
-                buffer.setRGB(i, 0, 0, 0);
-            }
-            for(int i=0;i<chargeBar;i++){
-                buffer.setRGB(counter1, r, g, b);
-                buffer.setRGB((counter1+1), r, g, b);
-                buffer.setRGB(counter2, r, g, b);
-                buffer.setRGB((counter2-1), r, g, b);
-                counter1+=2;
-                counter2-=2;
-            }
-        } else {
-            for(int i=0;i<buffer.getLength();i++){
-                buffer.setRGB(i, 0, 0, 0);
-            }
-            for(int i=0;i<4;i++) {
-                buffer.setRGB(counter1, r, g, b);
-                buffer.setRGB((counter1+1), r, g, b);
-                buffer.setRGB(counter2, r, g, b);
-                buffer.setRGB((counter2-1), r, g, b);
-                counter1+=2;
-                counter2-=2;
-            }
-            for(int i=15;i>20-chargeBar;i--) {
-                buffer.setRGB(i, r, g, b);
-            }
-        }
-        led.setData(buffer);
-    }
+    // public void charge(int r, int g, int b, double input) { // from 24->31&23->16, then 15->0 
+    //     int chargeBar = MathUtility.clamp((int)Math.abs((input * 20)), 0, 20);
+    //     int counter1 = 24;
+    //     int counter2 = 23;
+    //     if(chargeBar <= 4) {
+    //         for(int i=0;i<buffer.getLength();i++){
+    //             buffer.setRGB(i, 0, 0, 0);
+    //         }
+    //         for(int i=0;i<chargeBar;i++){
+    //             buffer.setRGB(counter1, r, g, b);
+    //             buffer.setRGB((counter1+1), r, g, b);
+    //             buffer.setRGB(counter2, r, g, b);
+    //             buffer.setRGB((counter2-1), r, g, b);
+    //             counter1+=2;
+    //             counter2-=2;
+    //         }
+    //     } else {
+    //         for(int i=0;i<buffer.getLength();i++){
+    //             buffer.setRGB(i, 0, 0, 0);
+    //         }
+    //         for(int i=0;i<4;i++) {
+    //             buffer.setRGB(counter1, r, g, b);
+    //             buffer.setRGB((counter1+1), r, g, b);
+    //             buffer.setRGB(counter2, r, g, b);
+    //             buffer.setRGB((counter2-1), r, g, b);
+    //             counter1+=2;
+    //             counter2-=2;
+    //         }
+    //         for(int i=15;i>20-chargeBar;i--) {
+    //             buffer.setRGB(i, r, g, b);
+    //         }
+    //     }
+    //     led.setData(buffer);
+    // }
 
     @Override
     public void periodic () {

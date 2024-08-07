@@ -40,20 +40,21 @@ public class GROUND extends Command {
 
   @Override
   public void initialize() {
-    s_Upper.setLeftShooter(0);
-    s_Upper.setRightShooter(0);
-    s_Upper.setIntake(0);
+    UpperConstants.INTAKE_GROUND_SPEED = AngularVelocity.fromRevPM(-3000);
   }
 
   @Override
   public void execute() {
     s_Upper.setLeftShooter(0);
     s_Upper.setRightShooter(0);
-    RobotConstants.upperState = UpperState.GROUND;
-    s_Upper.setElbow(-elbowPID.calculate(UpperStateMachine.elbowTarget.getRotations() - s_Upper.getElbowRotation()));
-    if (s_Upper.hasNote()) {UpperConstants.INTAKE_GROUND_SPEED = AngularVelocity.fromRevPM(0);
-    } else {UpperConstants.INTAKE_GROUND_SPEED = AngularVelocity.fromRevPM(-2000);}
-    s_Upper.setIntake(UpperStateMachine.intakeTarget.getRevPM() / UpperConstants.INTAKE_MAX_RPM);
+    if (!s_Upper.hasNote()) {
+      RobotConstants.upperState = UpperState.GROUND;
+      s_Upper.setElbow(-elbowPID.calculate(UpperStateMachine.elbowTarget.getRotations() - s_Upper.getElbowRotation()));
+      s_Upper.setIntake(UpperStateMachine.intakeTarget.getRevPM() / UpperConstants.INTAKE_MAX_RPM);
+    } else {
+        RobotConstants.upperState = UpperState.DEFAULT;
+        s_Upper.setIntake(UpperStateMachine.intakeTarget.getRevPM() / UpperConstants.INTAKE_MAX_RPM);
+    }
   }
 
   @Override

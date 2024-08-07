@@ -61,7 +61,7 @@ public class Constants {
 
         public static boolean speedLimitEnabled = true;
     
-        public static final double elbowKP = 6.8;
+        public static final double elbowKP = 6.5;
         public static final double elbowKI = 0.0;
         public static final double elbowKD = 0.5;
         public static final double elbowiWindup = 0.0;
@@ -72,14 +72,14 @@ public class Constants {
     
         public static final Rotation2d ELBOW_AMP_POS = Rotation2d.fromRotations(0.013916);
         public static final Rotation2d ELBOW_DEFAULT_POS = Rotation2d.fromRotations(-0.203867);
-        public static final Rotation2d ELBOW_ENDGAME_POS = Rotation2d.fromRotations(-0.244);
-        public static final Rotation2d ELBOW_GROUND_POS = Rotation2d.fromRotations(-0.2435);
+        public static final Rotation2d ELBOW_ENDGAME_POS = Rotation2d.fromRotations(-0.248);
+        public static final Rotation2d ELBOW_GROUND_POS = Rotation2d.fromRotations(-0.247);
         public static final Rotation2d ELBOW_PREENDGAME_POS = Rotation2d.fromRotations(0.01);
 
         public static final AngularVelocity INTAKE_AMP_SPEED = AngularVelocity.fromRevPM(0);
         public static final AngularVelocity INTAKE_DEFAULT_SPEED = AngularVelocity.fromRevPM(0);
         public static final AngularVelocity INTAKE_ENDGAME_SPEED = AngularVelocity.fromRevPM(0);
-        public static AngularVelocity INTAKE_GROUND_SPEED = AngularVelocity.fromRevPM(-2000);
+        public static AngularVelocity INTAKE_GROUND_SPEED = AngularVelocity.fromRevPM(-3000);
         public static final AngularVelocity INTAKE_PREENDGAME_SPEED = AngularVelocity.fromRevPM(0);
         public static final AngularVelocity INTAKE_SHOOT_SPEED = AngularVelocity.fromRevPM(-3000);
         public static final AngularVelocity INTAKE_SPEAKER_SPEED = AngularVelocity.fromRevPM(0);
@@ -93,7 +93,7 @@ public class Constants {
         public static final AngularVelocity SHOOTER_GROUND_SPEED = AngularVelocity.fromRevPM(0);
         public static final AngularVelocity SHOOTER_PREENDGAME_SPEED = AngularVelocity.fromRevPM(0);
 
-        public static final double SHOOTER_LEGAL_RPM = 4000;
+        public static final double SHOOTER_LEGAL_RPM = 3500;
 
     }
 
@@ -295,8 +295,8 @@ public class Constants {
     }
 
         public static final HolonomicPathFollowerConfig pathFollowerConfig = new HolonomicPathFollowerConfig(
-            new PIDConstants(3, 0, 0.005), // Translation constants 
-            new PIDConstants(0.5, 0, 0), // Rotation constants 
+            new PIDConstants(0.5, 0, 0.001), // Translation constants 
+            new PIDConstants(0.08, 0, 0), // Rotation constants 
             maxModuleSpeed, 
             LFModuleOffset.getNorm(), // Drive base radius (distance from center to furthest module) 
             new ReplanningConfig(true, true)
@@ -366,9 +366,9 @@ public class Constants {
     }
 
     public static final class LimeLight {
-        public static final double KPDefault = 0.011; // 0.013
-        public static final double KIDefault = 0.0;
-        public static final double KDDefault = 0.01;
+        public static final double KPDefault = 0.0033; // 0.013
+        public static final double KIDefault = 0.001;
+        public static final double KDDefault = 0.00001;
         public static final double WindupDefault = 0;
         public static final double LimitDefault = 0;
         public static final double SmoothDefault = 0.7;

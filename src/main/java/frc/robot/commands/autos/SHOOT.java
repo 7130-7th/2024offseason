@@ -46,32 +46,35 @@ public class SHOOT extends Command {
 
   @Override
   public void execute() {
-    if (Math.abs(s_Upper.getShooterRPM()) <= UpperConstants.SHOOTER_LEGAL_RPM) {
-    RobotConstants.upperState = UpperState.SPEAKER;
-    s_Upper.setIntake(0);
-    s_Upper.setElbow(-elbowPID.calculate(UpperStateMachine.elbowTarget.getRotations() - s_Upper.getElbowRotation()));
-    double output = LinearRegression.calculate(MapConstants.SHOOTER_RPM_TO_OUTPUT, UpperStateMachine.shooterTarget.getRevPM());
-    s_Upper.setLeftShooter(output + shooterPID.calculate(s_Upper.getLeftShooterRPM(), UpperStateMachine.shooterTarget.getRevPM()));
-    s_Upper.setRightShooter(output + shooterPID.calculate(s_Upper.getRightShooterRPM(), UpperStateMachine.shooterTarget.getRevPM()));
-    } 
-    if (Math.abs(s_Upper.getShooterRPM()) >= UpperConstants.SHOOTER_LEGAL_RPM) {
+    if ( timer.get() >= 1.4
+      // Math.abs(s_Upper.getShooterRPM()) >= UpperConstants.SHOOTER_LEGAL_RPM
+      ) {
     RobotConstants.upperState = UpperState.SHOOT;
-    s_Upper.setElbow(-elbowPID.calculate(UpperStateMachine.elbowTarget.getRotations() - s_Upper.getElbowRotation()));
-    s_Upper.setIntake(UpperStateMachine.intakeTarget.getRevPM() / UpperConstants.INTAKE_MAX_RPM);
-    double output = LinearRegression.calculate(MapConstants.SHOOTER_RPM_TO_OUTPUT, UpperStateMachine.shooterTarget.getRevPM());
-    s_Upper.setLeftShooter(output + shooterPID.calculate(s_Upper.getLeftShooterRPM(), UpperStateMachine.shooterTarget.getRevPM()));
-    s_Upper.setRightShooter(output + shooterPID.calculate(s_Upper.getRightShooterRPM(), UpperStateMachine.shooterTarget.getRevPM()));
+    // s_Upper.setElbow(-elbowPID.calculate(UpperStateMachine.elbowTarget.getRotations() - s_Upper.getElbowRotation()));
+    s_Upper.setIntake(-2000);
+    // double output = LinearRegression.calculate(MapConstants.SHOOTER_RPM_TO_OUTPUT, UpperStateMachine.shooterTarget.getRevPM());
+    // s_Upper.setLeftShooter(output + shooterPID.calculate(s_Upper.getLeftShooterRPM(), UpperStateMachine.shooterTarget.getRevPM()));
+    // s_Upper.setRightShooter(output + shooterPID.calculate(s_Upper.getRightShooterRPM(), UpperStateMachine.shooterTarget.getRevPM()));
+    } else {
+      RobotConstants.upperState = UpperState.SPEAKER;
+      s_Upper.setIntake(0);
+      s_Upper.setElbow(-elbowPID.calculate(UpperStateMachine.elbowTarget.getRotations() - s_Upper.getElbowRotation()));
+      double output = LinearRegression.calculate(MapConstants.SHOOTER_RPM_TO_OUTPUT, UpperStateMachine.shooterTarget.getRevPM());
+      s_Upper.setLeftShooter(output + shooterPID.calculate(s_Upper.getLeftShooterRPM(), UpperStateMachine.shooterTarget.getRevPM()));
+      s_Upper.setRightShooter(output + shooterPID.calculate(s_Upper.getRightShooterRPM(), UpperStateMachine.shooterTarget.getRevPM()));      
     }
   }
 
   @Override
   public void end(boolean interrupted){
-    // System.out.println("SHOOT end");
   }
 
   @Override
   public boolean isFinished() {
-    if (timer.get() >= 1.8 | !s_Upper.hasNote()) {
+    if (!s_Upper.hasNote()) {
+      s_Upper.setIntake(0);
+      s_Upper.setLeftShooter(0);
+      s_Upper.setRightShooter(0);
       return true;
     } else {
       return false;

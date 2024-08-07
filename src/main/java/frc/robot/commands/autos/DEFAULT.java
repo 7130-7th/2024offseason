@@ -59,7 +59,7 @@ public class DEFAULT extends Command {
 
   @Override
   public boolean isFinished() {
-    if (timer.get() >= 0.8) {
+    if (timer.get() >= 01) {
         return true;
     } else {
         return false;

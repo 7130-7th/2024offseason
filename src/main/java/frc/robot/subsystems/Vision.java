@@ -60,5 +60,11 @@ public class Vision extends SubsystemBase {
             Rotation2d.fromDegrees(rFilter.getAverage(getRobotRotation()))
         );
         SmartDashboard.putNumberArray("robotPose", new double[]{robotPose.getX(), robotPose.getY(), robotPose.getRotation().getDegrees()});
+        
+    SmartDashboard.putNumber("tx", tx.getDouble(0.0));
+    // SmartDashboard.putNumber("ty", ty.getDouble(0.0));
+    SmartDashboard.putNumber("tz", tpcs.getDoubleArray(new double[6])[2]);
+    // SmartDashboard.putNumber("speed", rotationVal);
+    
     }
 }
