@@ -69,6 +69,7 @@ public class AIM extends Command {
   public void initialize() {
     timer.reset();
     timer.start();
+    s_Vision.setpriorityId();
   }
 
   @Override

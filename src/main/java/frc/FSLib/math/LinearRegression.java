@@ -21,4 +21,17 @@ public class LinearRegression {
         return dataSet[mid-1][index] * (1-dx/x) + dataSet[mid][index] * dx/x;
     }
 
+    public static final double[][] DISTANCE_TO_ELBOW_AND_SHOOTER = {
+        {-Double.MAX_VALUE, -0.243},
+        {1.54,-0.22},
+        {2.25, -0.1765},
+        {3, -0.1564},
+        {4, -0.1411},
+        {Double.MAX_VALUE, -0.08}
+    };
+
+    public static void main(String[] args) {
+        System.out.println(calculate(DISTANCE_TO_ELBOW_AND_SHOOTER,1.6 ,1));
+    }
+
 }

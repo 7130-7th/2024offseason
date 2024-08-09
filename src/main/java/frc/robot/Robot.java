@@ -32,6 +32,7 @@ public class Robot extends TimedRobot {
   public void robotPeriodic() {
     CommandScheduler.getInstance().run();
     upperStateMachine.update();
+    
     // poseEstimator.update();
   }
 

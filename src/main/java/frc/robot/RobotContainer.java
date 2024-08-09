@@ -50,6 +50,7 @@ public class RobotContainer {
     s_Swerve.setPose(new Pose2d(new Translation2d(13.56, 5.56), Rotation2d.fromDegrees(180)));
     s_Swerve.setDefaultCommand(teleopSwerve);
     s_Upper.setDefaultCommand(teleopUpper);
+    s_Vision.setpriorityId();
     
     // s_Upper.setDefaultCommand(new RunCommand(()->{
       
@@ -75,32 +76,41 @@ public class RobotContainer {
 
   public Command getAutonomousCommand() {
     return new SequentialCommandGroup (
+    //   new DEFAULT(s_Upper),
+    //   new SHOOT(s_Upper),
+    //   new DEFAULT(s_Upper),
+    //   new ParallelRaceGroup(
+    //     new GROUND(s_Upper),
+    //     new PathPlannerAuto("MB-X2")
+    //   ),
+    //   new DEFAULT(s_Upper),
+    //   new AIM(s_Swerve, s_Vision),
+    //   new SHOOT(s_Upper),
+    //   new ParallelCommandGroup(
+    //     new GROUND(s_Upper),
+    //     new PathPlannerAuto("X2-X3")
+    //   ),
+    //   new DEFAULT(s_Upper),
+    //   new AIM(s_Swerve, s_Vision),
+    //   new SHOOT(s_Upper)
+    // );
       new DEFAULT(s_Upper),
       new SHOOT(s_Upper),
       new DEFAULT(s_Upper),
       new ParallelRaceGroup(
         new GROUND(s_Upper),
-        new PathPlannerAuto("MB-X2")
+        new PathPlannerAuto("LB-Y1")
       ),
-      new DEFAULT(s_Upper),
-      new AIM(s_Swerve, s_Vision),
-      new SHOOT(s_Upper),
-      // new ParallelRaceGroup(
+      // new DEFAULT(s_Upper),
+      // new AIM(s_Swerve, s_Vision),
+      // new SHOOT(s_Upper),
+      // new ParallelCommandGroup(
       //   new GROUND(s_Upper),
-      //   new PathPlannerAuto("MB-X1")
-      //   ),
-    //   new ParallelCommandGroup(
-    //     new PathPlannerAuto("X1-X2"),
-    //     new GROUND(s_Upper)
-    //   ),
-    //   new SHOOT(s_Upper),
-      new ParallelCommandGroup(
-        new PathPlannerAuto("X2-X3"),
-        new GROUND(s_Upper)
-      ),
+      //   new PathPlannerAuto("X1-Y1")
+      // ),
+      new PathPlannerAuto("Y1-SP"),
       new DEFAULT(s_Upper),
       new AIM(s_Swerve, s_Vision),
-      new SHOOT(s_Upper)
-    );
+      new SHOOT(s_Upper));
   }
 }

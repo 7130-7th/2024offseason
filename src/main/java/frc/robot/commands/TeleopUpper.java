@@ -48,6 +48,9 @@ public class TeleopUpper extends Command {
         if (controller.getRightBumperPressed()) RobotConstants.upperState = RobotConstants.upperState == UpperState.ENDGAME ? UpperState.DEFAULT : UpperState.ENDGAME;
         if(controller.getRightTriggerAxis() > 0.8) RobotConstants.upperState = UpperState.SHOOT;
         if(controller.getRightTriggerAxis() < 0.8 && RobotConstants.upperState == UpperState.SHOOT) RobotConstants.upperState = UpperState.DEFAULT;
+        if(controller.getLeftTriggerAxis() > 0.8) RobotConstants.upperState = UpperState.BASE;
+        if(controller.getLeftTriggerAxis() < 0.8 && RobotConstants.upperState == UpperState.BASE) RobotConstants.upperState = UpperState.DEFAULT;
+        
 
         if (s_Upper.hasNote()) {UpperConstants.INTAKE_GROUND_SPEED = AngularVelocity.fromRevPM(0);} 
         else {UpperConstants.INTAKE_GROUND_SPEED = AngularVelocity.fromRevPM(-2000);}

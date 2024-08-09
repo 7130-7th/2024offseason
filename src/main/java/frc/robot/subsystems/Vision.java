@@ -5,6 +5,7 @@ import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.networktables.NetworkTable;
 import edu.wpi.first.networktables.NetworkTableEntry;
 import edu.wpi.first.networktables.NetworkTableInstance;
+import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.FSLib.math.NoiseFilter;
@@ -42,6 +43,14 @@ public class Vision extends SubsystemBase {
 
     public Pose2d getRobotPose () {
         return robotPose;
+    }
+
+    public void setpriorityId(){
+        if (DriverStation.getAlliance().get()==DriverStation.Alliance.Blue) {
+            table.getEntry("priorityid").setInteger(7);
+        }else{
+            table.getEntry("priorityid").setInteger(4);
+        }
     }
 
     public boolean hasTarget () {

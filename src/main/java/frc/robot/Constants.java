@@ -106,7 +106,8 @@ public class Constants {
             GROUND,
             PREENDGAME,
             SHOOT,
-            SPEAKER
+            SPEAKER,
+            BASE
         }
 
         public static Rotation2d elbowTarget;
@@ -148,6 +149,11 @@ public class Constants {
                     break;
                 case SHOOT:
                         intakeTarget = UpperConstants.INTAKE_SHOOT_SPEED;
+                    break;
+                case BASE:
+                    elbowTarget = UpperConstants.ELBOW_DEFAULT_POS;
+                    intakeTarget = UpperConstants.INTAKE_DEFAULT_SPEED;
+                    shooterTarget = AngularVelocity.fromRevPM(-4000);
                 case SPEAKER:
                     double[] tpcs = LimelightHelpers.getTargetPose_CameraSpace("limelight");
                     double tz = tpcs[2];
@@ -157,8 +163,8 @@ public class Constants {
                         : RobotConstants.odometryPose.getTranslation().getDistance(FieldConstants.blueSpeakerCoord);
                         if (tz>=1) {
                     elbowTarget = Rotation2d.fromRotations(
-                        // LinearRegression.calculate(MapConstants.DISTANCE_TO_ELBOW_AND_SHOOTER, distance, 1)
-                        PolynomialRegression.predictDeg(tz)
+                        LinearRegression.calculate(MapConstants.DISTANCE_TO_ELBOW_AND_SHOOTER, tz, 1)
+                        // PolynomialRegression.predictDeg(tz)
                     );
                     if (RobotConstants.upperState == UpperState.SHOOT) {
                         intakeTarget = UpperConstants.INTAKE_SHOOT_SPEED;
